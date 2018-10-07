@@ -31,11 +31,20 @@ int main(int argc, char **argv)
     sample_input_data_file << num << '\n';
   };
 
+  std::cout << "Writing "
+            << number_of_input_numbers
+            << " random numbers to "
+            << sample_input_data_file_name
+            << "..."
+            << std::endl;
+
   for (size_t i = 0; i < number_of_input_numbers; i++)
   {
     unsigned int random_number = rand() % max_number;
     write_number_to_sample_input_file(random_number);
   }
+
+  std::cout << "Done!" << std::endl;
 
   sample_input_data_file.close();
 
