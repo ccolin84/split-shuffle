@@ -1,1 +1,1 @@
-g++ src/split-shuffle.cpp -o bin/split-shuffle -std=c++17
+g++ src/split-shuffle.cpp -o bin/split-shuffle.o -c -std=c++17
