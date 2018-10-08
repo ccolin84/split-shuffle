@@ -2,70 +2,186 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
 
-constexpr char input_file_name[] = "in.txt";
-constexpr char output_file_name[] = "out.txt";
-constexpr size_t pretend_max_ints_fitting_in_ram = 100;
+#include "split-shuffle.h"
 
-template <typename T>
-void inplace_fish_yates_shuffle(std::vector<T> &);
+#include "shuffle.h"
 
-size_t fill_with_n_ints_from_file(size_t, std::vector<int> &, std::ifstream &);
-
-void write_sorted_nums_to_outfile(const std::vector<int> &, std::ofstream &);
-
-int main(int argc, char **argv)
+SplitShuffler::SplitShuffler(SplitShufflerArgs &args)
+    : input_file_name(args.input_file_name),
+      output_file_name(args.output_file_name),
+      temp_file_prefix(args.temp_file_prefix),
+      temp_file_suffix(args.temp_file_suffix),
+      max_items_to_hold_in_memory(args.max_items_to_hold_in_memory),
+      item_buffer(args.max_items_to_hold_in_memory)
 {
-  // open input and output files
-  std::ifstream input_file(input_file_name);
-  std::ofstream output_file(output_file_name);
+}
 
-  std::vector<int> input_chunk;
-  input_chunk.reserve(pretend_max_ints_fitting_in_ram);
+SplitShufflerResult SplitShuffler::shuffle()
+{
+  size_t number_of_inputs = this->count_input_nums();
 
-  std::cout << "Starting shuffle..." << std::endl;
-  size_t num_ints_sorted;
-
-  while ((num_ints_sorted = fill_with_n_ints_from_file(pretend_max_ints_fitting_in_ram, input_chunk, input_file)))
+  // validate the input file contents
+  if (number_of_inputs == 0)
   {
-    std::cout << "shuffling " << num_ints_sorted << " numbers" << std::endl;
-    inplace_fish_yates_shuffle<int>(input_chunk);
-    write_sorted_nums_to_outfile(input_chunk, output_file);
-    input_chunk.clear();
+    return {true, "No numbers to sort!"};
+  }
+  if (number_of_inputs == 1)
+  {
+    return {true, "One number is already sorted!"};
   }
 
-  std::cout << "Done shuffling" << std::endl;
-  // close input and output files
+  size_t number_of_temp_files = this->get_number_of_temp_files(number_of_inputs);
+  this->set_temp_file_names(number_of_temp_files);
+  // first pass of mixing the numbers
+  this->place_nums_in_random_temp_files();
+  // second pass of shuffling the random chunks
+  this->write_shuffled_chunks_to_outfile();
+  // clean up temp files
+  this->delete_temp_files();
+
+  return {false};
+}
+
+size_t SplitShuffler::count_input_nums() const
+{
+  std::ifstream input_file(this->input_file_name);
+  std::string line;
+  size_t count = 0;
+
+  while (std::getline(input_file, line))
+  {
+    ++count;
+  }
+
   input_file.close();
-  output_file.close();
-  return 0;
+  return count;
 }
 
-template <typename T>
-void inplace_fish_yates_shuffle(std::vector<T> &numbers_to_shuffle)
+size_t SplitShuffler::get_number_of_temp_files(size_t num_inputs) const
 {
-  for (size_t i = numbers_to_shuffle.size() - 1; i > 0; i--)
+  return 1 + ((num_inputs - 1) / this->max_items_to_hold_in_memory);
+}
+
+std::string SplitShuffler::get_temp_file_name(size_t file_number) const
+{
+  return this->temp_file_prefix + std::to_string(file_number) + this->temp_file_suffix;
+}
+
+void SplitShuffler::set_temp_file_names(size_t num_temp_files)
+{
+  if (this->temp_file_names.size())
   {
-    unsigned int rand_inx = rand() % i;
-    std::iter_swap(std::begin(numbers_to_shuffle) + i, std::begin(numbers_to_shuffle) + rand_inx);
+    this->temp_file_names.clear();
+  }
+
+  this->temp_file_names.reserve(num_temp_files);
+  for (size_t i = 0; i < num_temp_files; i++)
+  {
+    std::string temp_file_name = this->get_temp_file_name(i);
+    this->temp_file_names.push_back(temp_file_name);
   }
 }
 
-size_t fill_with_n_ints_from_file(size_t num_ints_to_read, std::vector<int> &num_container, std::ifstream &input_file)
+void SplitShuffler::place_nums_in_random_temp_files()
 {
+  std::vector<std::ofstream> temp_file_ofstreams = this->get_temp_file_ofstreams();
+  std::ifstream input_file(this->input_file_name);
+
+  size_t num_temp_files = temp_file_ofstreams.size();
+
+  // keep track of how many items we've put in each temp file
+  std::vector<int> num_in_temp_file_at_inx(num_temp_files);
+
+  std::string line;
+  unsigned int rand_inx;
+  while (std::getline(input_file, line))
+  {
+    rand_inx = rand() % num_temp_files;
+
+    // make sure a single temp file doesn't get too big
+    while (num_in_temp_file_at_inx[rand_inx] == this->max_items_to_hold_in_memory)
+    {
+      rand_inx = rand() % num_temp_files;
+    }
+
+    temp_file_ofstreams[rand_inx] << line << '\n';
+    num_in_temp_file_at_inx[rand_inx]++;
+  }
+
+  // close file streams
+  input_file.close();
+  std::for_each(std::begin(temp_file_ofstreams), std::end(temp_file_ofstreams), [](std::ofstream &out_stream) {
+    out_stream.close();
+  });
+}
+
+std::vector<std::ofstream> SplitShuffler::get_temp_file_ofstreams()
+{
+  std::vector<std::ofstream> temp_file_output_streams;
+  temp_file_output_streams.reserve(this->temp_file_names.size());
+  for (std::string temp_file_name : this->temp_file_names)
+  {
+    temp_file_output_streams.push_back(std::ofstream(temp_file_name));
+  }
+  return temp_file_output_streams;
+}
+
+void SplitShuffler::write_shuffled_chunks_to_outfile()
+{
+  remove(this->output_file_name.c_str());
+  for (std::string temp_file_name : this->temp_file_names)
+  {
+    this->fill_buffer_from_file(temp_file_name);
+    shuffle::inplace_fish_yates_shuffle<int>(this->item_buffer);
+    this->write_item_buffer_to_outfile();
+  }
+}
+
+void SplitShuffler::write_item_buffer_to_outfile() const
+{
+  std::ofstream output_file = std::ofstream(this->output_file_name, std::ofstream::app);
+  std::for_each(std::begin(this->item_buffer), std::end(this->item_buffer), [&output_file](int num) {
+    output_file << num << '\n';
+  });
+  output_file.close();
+}
+
+size_t SplitShuffler::fill_buffer_from_file(std::string &in_file_name)
+{
+  std::ifstream input_file(in_file_name);
   size_t num_ints_read = 0;
   std::string line;
-  while (num_ints_read < num_ints_to_read && std::getline(input_file, line))
+
+  // make sure the buffer is clear before using it
+  if (this->item_buffer.size())
   {
-    num_container.push_back(atoi(line.c_str()));
+    this->item_buffer.clear();
+  }
+
+  while (num_ints_read < this->max_items_to_hold_in_memory && std::getline(input_file, line))
+  {
+    this->item_buffer.push_back(atoi(line.c_str()));
     ++num_ints_read;
   }
+
+  input_file.close();
   return num_ints_read;
 }
 
-void write_sorted_nums_to_outfile(const std::vector<int> &sorted_nums, std::ofstream &output_file)
+void SplitShuffler::delete_temp_files() const
 {
-  std::for_each(std::begin(sorted_nums), std::end(sorted_nums), [&output_file](int num) {
-    output_file << num << '\n';
-  });
+  for (std::string temp_file_name : this->temp_file_names)
+  {
+    remove(temp_file_name.c_str());
+  }
+}
+
+void SplitShuffler::print_item_buffer() const
+{
+  for (int item : this->item_buffer)
+  {
+    std::cout << item << std::endl;
+  }
 }
