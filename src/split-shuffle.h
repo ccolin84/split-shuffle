@@ -38,7 +38,9 @@ private:
   size_t fill_buffer_from_file(std::string &);
   void write_item_buffer_to_outfile() const;
   void delete_temp_files() const;
+
   void print_item_buffer() const;
+  void print_temp_file_names() const;
 
 public:
   SplitShuffler(SplitShufflerArgs &);

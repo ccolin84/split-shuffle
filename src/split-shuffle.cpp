@@ -185,3 +185,11 @@ void SplitShuffler::print_item_buffer() const
     std::cout << item << std::endl;
   }
 }
+
+void SplitShuffler::print_temp_file_names() const
+{
+  for (std::string temp_file_name : this->temp_file_names)
+  {
+    std::cout << temp_file_name << std::endl;
+  }
+}
