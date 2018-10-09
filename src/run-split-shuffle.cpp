@@ -1,3 +1,4 @@
+#include <iostream>
 #include "split-shuffle.h"
 
 constexpr char input_file_name[] = "in.txt";
@@ -8,6 +9,11 @@ int main(int argc, char **argv)
   SplitShufflerArgs args;
   args.max_items_to_hold_in_memory = 10;
   SplitShuffler shuffler = SplitShuffler(args);
-  shuffler.shuffle();
+  SplitShufflerResult result = shuffler.shuffle();
+  if (result.failed)
+  {
+    std::cout << "Shuffler failed!\nReason: "
+              << result.failure_reason << std::endl;
+  }
   return 0;
 }
