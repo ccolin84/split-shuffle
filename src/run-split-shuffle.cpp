@@ -8,6 +8,8 @@ int main(int argc, char **argv)
 {
   SplitShufflerArgs args;
   args.max_items_to_hold_in_memory = 10;
+  args.input_file_name = input_file_name;
+  args.output_file_name = output_file_name;
   SplitShuffler shuffler = SplitShuffler(args);
   SplitShufflerResult result = shuffler.shuffle();
   if (result.failed)

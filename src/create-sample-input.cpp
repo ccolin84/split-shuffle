@@ -33,7 +33,11 @@ int main(int argc, char **argv)
             << "..."
             << std::endl;
 
-  data_creator::populate_file_with_ints(sample_input_data_file_name, number_of_input_numbers);
+  data_creator::populate_file_with_ints(
+      sample_input_data_file_name,
+      number_of_input_numbers,
+      min_number,
+      max_number);
 
   std::cout
       << "Done!" << std::endl;
