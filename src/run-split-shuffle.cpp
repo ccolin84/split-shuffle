@@ -1,5 +1,5 @@
 #include <iostream>
-#include "split-shuffle.h"
+#include "split-shuffler.h"
 
 constexpr char input_file_name[] = "in.txt";
 constexpr char output_file_name[] = "out.txt";

@@ -1,0 +1,1 @@
+g++ src/split-shuffler.cpp -o bin/split-shuffler.o -c -std=c++17

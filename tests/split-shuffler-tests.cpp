@@ -1,4 +1,4 @@
-#include "split-shuffle.h"
+#include "split-shuffler.h"
 #include "test.h"
 #include "data-creator.h"
 

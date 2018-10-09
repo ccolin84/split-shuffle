@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <stdio.h>
 
-#include "split-shuffle.h"
+#include "split-shuffler.h"
 
 #include "shuffle.h"
 
