@@ -5,7 +5,7 @@
 constexpr char test_input_file_name[] = "test-inputs.txt";
 constexpr char test_output_file_name[] = "test-outputs.txt";
 
-int main(int argc, char **argv)
+void split_shuffler_tests()
 {
   test::TestGroup("SplitShuffle", []() {
     test::TestCase(
@@ -107,5 +107,4 @@ int main(int argc, char **argv)
         .run();
   })
       .run();
-  return 0;
 }
