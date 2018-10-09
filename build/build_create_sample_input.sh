@@ -1,1 +1,1 @@
-g++ src/create-sample-input.cpp -o bin/create-sample-input -std=c++17
+g++ -Wall src/create-sample-input.cpp -o bin/create-sample-input -std=c++17
