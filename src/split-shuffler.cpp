@@ -59,7 +59,7 @@ size_t SplitShuffler::count_input_nums() const
   return count;
 }
 
-size_t SplitShuffler::get_number_of_temp_files(size_t num_inputs) const
+size_t SplitShuffler::get_number_of_temp_files(const size_t num_inputs) const
 {
   return 1 + ((num_inputs - 1) / this->max_items_to_hold_in_memory);
 }
@@ -69,7 +69,7 @@ std::string SplitShuffler::get_temp_file_name(size_t file_number) const
   return this->temp_file_prefix + std::to_string(file_number) + this->temp_file_suffix;
 }
 
-void SplitShuffler::set_temp_file_names(size_t num_temp_files)
+void SplitShuffler::set_temp_file_names(const size_t num_temp_files)
 {
   if (this->temp_file_names.size())
   {
@@ -84,7 +84,7 @@ void SplitShuffler::set_temp_file_names(size_t num_temp_files)
   }
 }
 
-void SplitShuffler::place_nums_in_random_temp_files()
+void SplitShuffler::place_nums_in_random_temp_files() const
 {
   std::vector<std::ofstream> temp_file_ofstreams = this->get_temp_file_ofstreams();
   std::ifstream input_file(this->input_file_name);
@@ -117,7 +117,7 @@ void SplitShuffler::place_nums_in_random_temp_files()
   });
 }
 
-std::vector<std::ofstream> SplitShuffler::get_temp_file_ofstreams()
+std::vector<std::ofstream> SplitShuffler::get_temp_file_ofstreams() const
 {
   std::vector<std::ofstream> temp_file_output_streams;
   temp_file_output_streams.reserve(this->temp_file_names.size());
@@ -148,7 +148,7 @@ void SplitShuffler::write_item_buffer_to_outfile() const
   output_file.close();
 }
 
-size_t SplitShuffler::fill_buffer_from_file(std::string &in_file_name)
+size_t SplitShuffler::fill_buffer_from_file(const std::string &in_file_name)
 {
   std::ifstream input_file(in_file_name);
   size_t num_ints_read = 0;
