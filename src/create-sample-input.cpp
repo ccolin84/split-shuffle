@@ -14,12 +14,11 @@
 constexpr size_t min_number = 0, max_number = 1000;
 constexpr char sample_input_data_file_name[] = "in.txt";
 
+size_t number_of_input_numbers = 500;
+size_t user_input_number = 0;
+
 int main(int argc, char **argv)
 {
-  // determine the number of input numbers to create (default to 500)
-  size_t number_of_input_numbers = 500;
-  size_t user_input_number = 0;
-
   // if the user gives a cli argument, use that if it is a valid int > 0
   if (argc > 1 && (user_input_number = atoi(argv[1])))
   {
