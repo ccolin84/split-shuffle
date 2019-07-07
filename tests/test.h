@@ -1,6 +1,11 @@
 #include <functional>
 #include <iostream>
 
+/*
+ * Utilities for building and running test suites
+ * within the project
+ */
+
 namespace test
 {
 
