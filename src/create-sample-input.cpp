@@ -2,7 +2,7 @@
 #include <fstream>
 #include <stdlib.h>
 
-#include "data-creator.h"
+#include "src/data-creator.h"
 
 /*
 
@@ -12,7 +12,7 @@
 */
 
 constexpr size_t min_number = 0, max_number = 1000;
-constexpr char sample_input_data_file_name[] = "in.txt";
+constexpr char sample_input_data_file_name[] = "sample_in.txt";
 
 size_t number_of_input_numbers = 500;
 size_t user_input_number = 0;
