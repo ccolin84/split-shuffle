@@ -1,41 +1,44 @@
 CXX=g++-9
 CXXFLAGS=-Wall -std=c++17 -lstdc++fs -I ./
 
-.PHONY: all clean run-sample
+.PHONY: all clean run-sample test
 
-all: clean tests run-split-shuffle
+all: clean bin/tests bin/run-split-shuffle
 
-run-sample: sample-input.txt run-split-shuffle
+test: bin/tests
+	./bin/tests
+
+run-sample: bin bin/run-split-shuffle sample-input.txt 
 	./bin/run-split-shuffle sample_in.txt
 
-run-split-shuffle: split-shuffler.o run-split-shuffle.o
+bin/run-split-shuffle: bin bin/split-shuffler.o bin/run-split-shuffle.o
 	$(CXX) $(CXXFLAGS) \
 		bin/run-split-shuffle.o \
 		bin/split-shuffler.o \
 		-o bin/run-split-shuffle
 
-tests: split-shuffler.o
+bin/tests: bin bin/split-shuffler.o
 	$(CXX) $(CXXFLAGS) \
 		tests/*.cpp \
 		bin/split-shuffler.o \
 		-o bin/tests
 
 # a sample input file to be sorted
-sample-input.txt: create-sample-input
+sample-input.txt: bin bin/create-sample-input
 	./bin/create-sample-input
 
 # creates a sample input file to be sorted
-create-sample-input:
+bin/create-sample-input: bin
 	$(CXX) $(CXXFLAGS) \
 		src/create-sample-input.cpp \
 		-o bin/create-sample-input
 
-run-split-shuffle.o:
+bin/run-split-shuffle.o: bin
 	$(CXX) $(CXXFLAGS) \
 		src/run-split-shuffle.cpp \
 		-o bin/run-split-shuffle.o -c
 
-split-shuffler.o: bin
+bin/split-shuffler.o: bin
 	$(CXX) $(CXXFLAGS) \
 		lib/split-shuffler.cpp \
 		-o bin/split-shuffler.o -c
