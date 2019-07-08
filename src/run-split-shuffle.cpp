@@ -15,11 +15,11 @@ int main(int argc, char **argv)
   }
 
   if (!std::filesystem::exists(input_file_name)) {
-    std::cout << input_file_name << " doesn't exist!";
+    std::cout << input_file_name << " doesn't exist!" << std::endl;
     exit(1);
   }
 
-  std::cout << "Sorting file " << input_file_name;
+  std::cout << "Sorting file " << input_file_name << std::endl;
 
   SplitShufflerArgs args;
   args.max_items_to_hold_in_memory = 10;
@@ -27,10 +27,13 @@ int main(int argc, char **argv)
   args.output_file_name = output_file_name;
   SplitShuffler shuffler = SplitShuffler(args);
   SplitShufflerResult result = shuffler.shuffle();
+
   if (result.failed)
   {
     std::cout << "Shuffler failed!\nReason: "
               << result.failure_reason << std::endl;
   }
+
+  std::cout << "Done sorting " << input_file_name << "!" << std::endl;
   return 0;
 }
