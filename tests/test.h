@@ -2,19 +2,21 @@
 #include <iostream>
 
 /*
- * Utilities for building and running test suites
- * within the project
+ * Simple utilities for building and running test suites
+ * within the project.
+ *
+ * TestResult - returned from a test case to indicate the result
+ * TestCase - a single function that returns a TestResult
+ * TestGroup - provides a way to group TestCases
  */
 
 namespace test
 {
 
-struct TestResult
-{
-  bool failed;
-  std::string failure_reason;
-};
-
+/*
+ * Provides a logical grouping for running test cases
+ * These can be nested for more granular grouping
+ */
 class TestGroup
 {
 private:
@@ -51,6 +53,20 @@ public:
   }
 };
 
+/*
+ * Result of running a test case
+ * allows the attaching of a reason if it fails
+ */
+struct TestResult
+{
+  bool failed;
+  std::string failure_reason;
+};
+
+/*
+ * Wraps a single test case and
+ * prints out the result when run
+ */
 class TestCase
 {
 private:
@@ -95,5 +111,4 @@ public:
     }
   }
 };
-
 } // namespace test
