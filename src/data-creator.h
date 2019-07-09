@@ -2,7 +2,10 @@
 
 namespace data_creator
 {
-// function for writing a number to the sample input file
+/*
+ * Writes number_of_input_numbers between min_number
+ * and max_number to file_name
+ */
 void populate_file_with_ints(
     const std::string &file_name,
     const size_t number_of_input_numbers = 100,
@@ -20,8 +23,10 @@ void populate_file_with_ints(
   out_file.close();
 }
 
-// function for counting the number of entries in a file
-size_t count_entries_in_file(const std::string &file_name)
+/*
+ * Counts lines in a file
+ */
+size_t count_lines(const std::string &file_name)
 {
   std::ifstream input_file(file_name);
   std::string line;

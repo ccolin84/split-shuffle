@@ -23,7 +23,7 @@ void split_shuffler_tests()
 
           shuffler.shuffle();
 
-          size_t output_file_entries = data_creator::count_entries_in_file(test_output_file_name);
+          size_t output_file_entries = data_creator::count_lines(test_output_file_name);
           remove(test_input_file_name);
           remove(test_output_file_name);
           if (output_file_entries == num_test_entries)
@@ -56,7 +56,7 @@ void split_shuffler_tests()
 
           shuffler.shuffle();
 
-          size_t output_file_entries = data_creator::count_entries_in_file(test_output_file_name);
+          size_t output_file_entries = data_creator::count_lines(test_output_file_name);
           remove(test_input_file_name);
           remove(test_output_file_name);
           if (output_file_entries == num_test_entries)
@@ -89,7 +89,7 @@ void split_shuffler_tests()
 
           shuffler.shuffle();
 
-          size_t output_file_entries = data_creator::count_entries_in_file(test_output_file_name);
+          size_t output_file_entries = data_creator::count_lines(test_output_file_name);
           remove(test_input_file_name);
           remove(test_output_file_name);
           if (output_file_entries == num_test_entries)
