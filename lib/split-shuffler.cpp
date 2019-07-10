@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdio.h>
+#include <cmath>
 
 #include "split-shuffler.h"
 
@@ -44,6 +45,9 @@ SplitShufflerResult SplitShuffler::shuffle()
   return {false};
 }
 
+/*
+ * Counts the number of lines in the input file
+ */
 size_t SplitShuffler::count_input_nums() const
 {
   std::ifstream input_file(this->input_file_name);
@@ -61,7 +65,8 @@ size_t SplitShuffler::count_input_nums() const
 
 inline size_t SplitShuffler::get_number_of_temp_files(const size_t num_inputs) const
 {
-  return 1 + ((num_inputs - 1) / this->max_items_to_hold_in_memory);
+  double items_per_file = (double) num_inputs / (double) this->max_items_to_hold_in_memory;
+  return (size_t) std::ceil(items_per_file);
 }
 
 std::string SplitShuffler::get_temp_file_name(const size_t file_number) const
