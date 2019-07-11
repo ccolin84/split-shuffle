@@ -1,5 +1,5 @@
 #include "lib/split-shuffler.h"
-#include "tests/test.h"
+#include "test-lib/test.h"
 #include "src/data-creator.h"
 
 constexpr char test_input_file_name[] = "test-inputs.txt";

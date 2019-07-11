@@ -3,25 +3,43 @@ CXXFLAGS=-Wall -std=c++17 -lstdc++fs -I ./
 
 .PHONY: all clean run-sample test
 
-all: clean bin/tests bin/run-split-shuffle
+all: clean test bin/run-split-shuffle
 
-test: bin/tests
-	./bin/tests
+test: bin/e2e-tests bin/unit-tests
+	./bin/unit-tests
+	./bin/e2e-tests
 
-run-sample: bin bin/run-split-shuffle sample-input.txt 
-	./bin/run-split-shuffle sample_in.txt
-
+#######################################
+#  An Executable To Run On Your File #
+#######################################
 bin/run-split-shuffle: bin bin/split-shuffler.o bin/run-split-shuffle.o
 	$(CXX) $(CXXFLAGS) \
 		bin/run-split-shuffle.o \
 		bin/split-shuffler.o \
 		-o bin/run-split-shuffle
+#######################################
 
-bin/tests: bin bin/split-shuffler.o
+#######################################
+################ TESTS ################
+#######################################
+bin/e2e-tests: bin bin/split-shuffler.o
 	$(CXX) $(CXXFLAGS) \
-		tests/*.cpp \
+		e2e-tests/run-tests.cpp \
 		bin/split-shuffler.o \
-		-o bin/tests
+		-o bin/e2e-tests
+
+bin/unit-tests: bin bin/split-shuffler.o
+	$(CXX) $(CXXFLAGS) \
+		unit-tests/run-tests.cpp \
+		bin/split-shuffler.o \
+		-o bin/unit-tests
+#######################################
+
+#######################################
+# Run Split Shuffle On A Sample Input #
+#######################################
+run-sample: bin bin/run-split-shuffle sample-input.txt 
+	./bin/run-split-shuffle sample_in.txt
 
 # a sample input file to be sorted
 sample-input.txt: bin bin/create-sample-input
@@ -32,6 +50,7 @@ bin/create-sample-input: bin
 	$(CXX) $(CXXFLAGS) \
 		src/create-sample-input.cpp \
 		-o bin/create-sample-input
+#######################################
 
 bin/run-split-shuffle.o: bin
 	$(CXX) $(CXXFLAGS) \
