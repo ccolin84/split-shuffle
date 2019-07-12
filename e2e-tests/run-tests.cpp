@@ -2,6 +2,6 @@
 
 int main(int argc, char **argv)
 {
-  split_shuffler_tests();
+  split_shuffler_e2e_tests();
   return 0;
 }

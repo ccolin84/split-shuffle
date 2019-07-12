@@ -5,9 +5,9 @@
 constexpr char test_input_file_name[] = "test-inputs.txt";
 constexpr char test_output_file_name[] = "test-outputs.txt";
 
-void split_shuffler_tests()
+void split_shuffler_e2e_tests()
 {
-  test::TestGroup("SplitShuffle", []() {
+  test::TestGroup("SplitShuffler", []() {
     test::TestCase(
         "Correct output size given buffer size ==  input size",
         "Outputs the same number of items as the input given the buffer size equals the input size",
