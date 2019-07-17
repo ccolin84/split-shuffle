@@ -1,7 +1,7 @@
-#include <iostream>
+#include "unit-tests/split-shuffler.spec.h"
 
 int main(int argc, char **argv)
 {
-  std::cout << "No Unit Tests!" << std::endl;
+  split_shuffler_spec();
   return 0;
 }
