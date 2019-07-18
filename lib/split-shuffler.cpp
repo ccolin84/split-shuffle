@@ -139,7 +139,7 @@ void SplitShuffler::write_shuffled_chunks_to_outfile()
   for (const std::string temp_file_name : this->temp_file_names)
   {
     this->fill_buffer_from_file(temp_file_name);
-    shuffle::inplace_fish_yates_shuffle<int>(this->item_buffer);
+    shuffle::inplace_fisher_yates_shuffle<int>(this->item_buffer);
     this->write_item_buffer_to_outfile();
   }
 }

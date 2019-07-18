@@ -4,7 +4,7 @@
 namespace shuffle
 {
 template <typename T>
-void inplace_fish_yates_shuffle(std::vector<T> &numbers_to_shuffle)
+void inplace_fisher_yates_shuffle(std::vector<T> &numbers_to_shuffle)
 {
   srand(time(0));
   for (size_t i = numbers_to_shuffle.size() - 1; i > 0; i--)
