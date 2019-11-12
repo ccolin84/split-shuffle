@@ -1,20 +1,22 @@
 #include <iostream>
 #include <filesystem>
-#include "lib/split-shuffler.h"
+#include "SplitShuffle/SplitShuffle.h"
 
 char default_input_file_name[] = "in.txt";
 char output_file_name[] = "out.txt";
 
 int main(int argc, char **argv)
 {
-  char* input_file_name = default_input_file_name;
+  char *input_file_name = default_input_file_name;
 
   // use an input file name if one is passed
-  if (argc > 1) {
+  if (argc > 1)
+  {
     input_file_name = argv[1];
   }
 
-  if (!std::filesystem::exists(input_file_name)) {
+  if (!std::filesystem::exists(input_file_name))
+  {
     std::cout << input_file_name << " doesn't exist!" << std::endl;
     exit(1);
   }

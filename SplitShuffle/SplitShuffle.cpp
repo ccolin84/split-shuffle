@@ -1,13 +1,6 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <stdio.h>
-#include <cmath>
-
-#include "split-shuffler.h"
-
-#include "shuffle.h"
+#include "pch.h"
+#include "SplitShuffle.h"
+#include "Shuffle.h"
 
 SplitShuffler::SplitShuffler(SplitShufflerArgs &args)
     : input_file_name(args.input_file_name),
@@ -65,8 +58,8 @@ size_t SplitShuffler::count_input_nums() const
 
 inline size_t SplitShuffler::get_number_of_temp_files(const size_t num_inputs) const
 {
-  double items_per_file = (double) num_inputs / (double) this->max_items_to_hold_in_memory;
-  return (size_t) std::ceil(items_per_file);
+  double items_per_file = (double)num_inputs / (double)this->max_items_to_hold_in_memory;
+  return (size_t)std::ceil(items_per_file);
 }
 
 std::string SplitShuffler::get_temp_file_name(const size_t file_number) const
@@ -180,21 +173,5 @@ void SplitShuffler::delete_temp_files() const
   for (const std::string temp_file_name : this->temp_file_names)
   {
     remove(temp_file_name.c_str());
-  }
-}
-
-void SplitShuffler::print_item_buffer() const
-{
-  for (const int item : this->item_buffer)
-  {
-    std::cout << item << std::endl;
-  }
-}
-
-void SplitShuffler::print_temp_file_names() const
-{
-  for (const std::string temp_file_name : this->temp_file_names)
-  {
-    std::cout << temp_file_name << std::endl;
   }
 }

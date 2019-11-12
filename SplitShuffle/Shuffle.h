@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <ctime>
 
@@ -13,4 +15,4 @@ void inplace_fisher_yates_shuffle(std::vector<T> &numbers_to_shuffle)
     std::iter_swap(std::begin(numbers_to_shuffle) + i, std::begin(numbers_to_shuffle) + rand_inx);
   }
 }
-}
+} // namespace shuffle

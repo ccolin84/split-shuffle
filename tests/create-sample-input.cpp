@@ -2,14 +2,12 @@
 #include <fstream>
 #include <stdlib.h>
 
-#include "src/data-creator.h"
+#include "data-creator.h"
 
 /*
-
-  A program to generate a sample input file of integers
-  separated by newlines to run the shuffle program on
-
-*/
+ * A program to generate a sample input file of integers
+ * separated by newlines to run the shuffle program on
+ */
 
 constexpr size_t min_number = 0, max_number = 1000;
 constexpr char sample_input_data_file_name[] = "sample_in.txt";
@@ -38,8 +36,7 @@ int main(int argc, char **argv)
       min_number,
       max_number);
 
-  std::cout
-      << "Done!" << std::endl;
+  std::cout << "Done!" << std::endl;
 
   return 0;
 }

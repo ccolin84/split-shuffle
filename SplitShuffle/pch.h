@@ -6,3 +6,5 @@
 #include <iostream>
 #include <algorithm>
 #include <stdio.h>
+#include <string>
+#include <cmath>

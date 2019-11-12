@@ -1,6 +1,6 @@
-#include "lib/split-shuffler.h"
-#include "test-lib/test.h"
-#include "src/data-creator.h"
+#include "SplitShuffle/SplitShuffle.h"
+#include "test.h"
+#include "data-creator.h"
 
 constexpr char test_input_file_name[] = "test-inputs.txt";
 constexpr char test_output_file_name[] = "test-outputs.txt";
